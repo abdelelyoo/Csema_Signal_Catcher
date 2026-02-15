@@ -7,10 +7,6 @@ Flask>=2.0.0
 pandas>=1.3.0,<2.0.0
 numpy>=1.21.0,<2.0.0
 
-# Data Sources
-git+https://github.com/deepentropy/tvscreener.git
-git+https://github.com/rongardF/tvdatafeed.git
-
 # Server
 gunicorn>=20.0.0
 

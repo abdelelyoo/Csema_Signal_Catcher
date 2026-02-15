@@ -1,18 +1,12 @@
 {
-  "builds": [
-    {
-      "src": "app.py",
-      "use": "@vercel/python",
-      "config": { "maxDuration": 60 }
-    }
-  ],
+  "build": {
+    "command": "pip install git+https://github.com/deepentropy/tvscreener.git git+https://github.com/rongardF/tvdatafeed.git && pip install -r requirements.txt",
+    "output": "build"
+  },
   "routes": [
     {
       "src": "/(.*)",
       "dest": "app.py"
     }
-  ],
-  "env": {
-    "FLASK_APP": "app.py"
-  }
+  ]
 }
