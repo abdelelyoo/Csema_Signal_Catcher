@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+
+{% block title %}Position Sizing{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>⚖️ Position Sizing</h1>
+    <p class="page-description">
+        Calculate optimal position sizes including CSEMA brokerage fees.
+        <br>Risk levels: <span class="risk-high">High: 2%</span> | <span class="risk-medium">Medium: 1.5%</span> | <span class="risk-low">Low: 1%</span>
+    </p>
+
+    <div class="form-section">
+        <form method="POST" class="sizing-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cash">Available Cash (MAD)</label>
+                    <input type="number" name="cash" id="cash" value="{{ cash if cash else '100000' }}" min="1000" step="1000" class="form-control">
+                    <small class="form-help">Your available trading capital in MAD</small>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-large btn-primary">
+                <span class="btn-icon">🧮</span>
+                Calculate Position Sizes
+            </button>
+        </form>
+    </div>
+
+    {% if results %}
+    <div class="results-section">
+        <div class="results-summary">
+            <h2>Position Sizing Results</h2>
+            
+            {% if not sufficient_funds %}
+            <div class="alert alert-warning">
+                <strong>⚠️ Warning:</strong> Signals require <strong>{{ "{:,.2f}".format(total_with_fees) }} MAD</strong> but only <strong>{{ "{:,.2f}".format(cash) }} MAD</strong> available.
+                <br>Select top 3-5 signals by conviction and risk/reward.
+            </div>
+            {% else %}
+            <div class="alert alert-success">
+                <strong>✅ OK:</strong> All signals can be taken with available cash (including fees)
+            </div>
+            {% endif %}
+
+            <div class="stats-grid fees-summary">
+                <div class="stat-card">
+                    <span class="stat-value">{{ total_signals }}</span>
+                    <span class="stat-label">Total Signals</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ "{:,.2f}".format(total_risk) }}</span>
+                    <span class="stat-label">Total Risk (MAD)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ "{:,.2f}".format(total_buy_fees) }}</span>
+                    <span class="stat-label">Buy Fees (MAD)</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ "{:,.2f}".format(total_roundtrip_fees) }}</span>
+                    <span class="stat-label">Roundtrip Fees (MAD)</span>
+                </div>
+                <div class="stat-card highlight">
+                    <span class="stat-value">{{ "{:,.2f}".format(total_with_fees) }}</span>
+                    <span class="stat-label">Total Cost with Fees (MAD)</span>
+                </div>
+            </div>
+        </div>
+
+        {% if recommendations %}
+        <div class="sizing-table-section">
+            <h3>Detailed Position Sizing</h3>
+            <div class="table-container">
+                <table class="data-table sizing-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Type</th>
+                            <th>Conviction</th>
+                            <th>Entry</th>
+                            <th>Stop</th>
+                            <th>Target</th>
+                            <th>R/R Gross</th>
+                            <th>R/R Net</th>
+                            <th>Shares</th>
+                            <th>Position Value</th>
+                            <th>Buy Fees</th>
+                            <th>Break-Even</th>
+                            <th>Total Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for rec in recommendations %}
+                        <tr class="{{ rec.conviction }}">
+                            <td class="symbol-cell"><strong>{{ rec.symbol }}</strong></td>
+                            <td>{{ rec.setup_type }}</td>
+                            <td>
+                                <span class="conviction-badge {{ rec.conviction }}">{{ rec.conviction.upper() }}</span>
+                            </td>
+                            <td class="numeric">{{ "%.2f"|format(rec.entry_price) }}</td>
+                            <td class="numeric stop">{{ "%.2f"|format(rec.stop_loss) }}</td>
+                            <td class="numeric target">{{ "%.2f"|format(rec.target_price) }}</td>
+                            <td class="numeric">1:{{ "%.1f"|format(rec.risk_reward) }}</td>
+                            <td class="numeric {{ 'positive' if rec.net_risk_reward >= 2 else 'warning' if rec.net_risk_reward >= 1.5 else 'negative' }}">
+                                1:{{ "%.1f"|format(rec.net_risk_reward) }}
+                            </td>
+                            <td class="numeric">{{ rec.max_position_size }}</td>
+                            <td class="numeric">{{ "{:,.2f}".format(rec.position_value) }}</td>
+                            <td class="numeric">{{ "%.2f"|format(rec.buy_fees) }}</td>
+                            <td class="numeric">{{ "%.2f"|format(rec.break_even_price) }}</td>
+                            <td class="numeric"><strong>{{ "{:,.2f}".format(rec.total_cost_with_fees) }}</strong></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="fee-breakdown-section">
+            <h3>Brokerage Fee Structure (CSEMA)</h3>
+            <div class="fee-grid">
+                <div class="fee-item">
+                    <span class="fee-label">Brokerage</span>
+                    <span class="fee-value">0.60%</span>
+                    <span class="fee-min">Min: 7.50 MAD</span>
+                </div>
+                <div class="fee-item">
+                    <span class="fee-label">Settlement</span>
+                    <span class="fee-value">0.20%</span>
+                    <span class="fee-min">Min: 2.50 MAD</span>
+                </div>
+                <div class="fee-item">
+                    <span class="fee-label">SBVC</span>
+                    <span class="fee-value">0.10%</span>
+                    <span class="fee-min">No min</span>
+                </div>
+                <div class="fee-item">
+                    <span class="fee-label">VAT</span>
+                    <span class="fee-value">10%</span>
+                    <span class="fee-min">On fees</span>
+                </div>
+            </div>
+            <p class="fee-note">Roundtrip fees (buy + sell) ≈ 1.98% of position value</p>
+        </div>
+        {% else %}
+        <div class="alert alert-warning">
+            <strong>No recommendations generated!</strong> Please run <a href="{{ url_for('screening') }}">Stage 1: Screening</a> and <a href="{{ url_for('signals') }}">Stage 2: Signals</a> first.
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

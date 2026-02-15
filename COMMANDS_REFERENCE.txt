@@ -1,0 +1,294 @@
+python main.py --stage screening
+python main.py --stage signals
+python main.py --position-sizing
+python main.py --performance
+
+
+
+python main.py --stage screening --full
+python main.py --stage signals --full
+python main.py --position-sizing --full
+python main.py --performance --full
+
+================================================================================
+                     SIGNAL CATCHER - COMMAND REFERENCE
+                         CSEMA Trading System v1.0.0
+================================================================================
+
+QUICK START
+-----------
+
+    python main.py --stage screening
+    python main.py --stage signals
+    python main.py --position-sizing
+    python main.py --performance
+
+
+================================================================================
+                              CORE COMMANDS
+================================================================================
+
+1. STAGE 1: MARKET SCREENING
+----------------------------
+Purpose: Identify trading candidates from CSEMA market
+
+Filtered Screening (recommended):
+    python main.py --stage screening
+
+Full Watchlist (all tickers, no filters):
+    python main.py --stage screening --full
+
+With custom options:
+    python main.py --stage screening --data-dir ./my_data
+    python main.py --stage screening --full --data-dir ./data
+
+Output: Creates watchlist_YYYYMMDD_position.csv and watchlist_YYYYMMDD_swing.csv
+
+
+2. STAGE 2: SIGNAL GENERATION
+-----------------------------
+Purpose: Generate entry signals with stop-loss and target prices
+
+Basic usage:
+    python main.py --stage signals
+
+With custom cash:
+    python main.py --stage signals --cash 25000
+
+With custom data directory:
+    python main.py --stage signals --data-dir ./my_data
+
+Combined options:
+    python main.py --stage signals --cash 50000 --data-dir ./data
+
+Prerequisite: Must run Stage 1 (screening) first
+Output: Displays position and swing trading signals with R/R ratios
+
+
+3. POSITION SIZING
+------------------
+Purpose: Calculate position sizes based on available cash and risk levels
+
+Basic usage:
+    python main.py --position-sizing
+
+With custom cash:
+    python main.py --position-sizing --cash 25000
+
+With custom data directory:
+    python main.py --position-sizing --data-dir ./my_data
+
+Risk Levels Applied:
+    - High Conviction:    2% risk per trade
+    - Medium Conviction:  1.5% risk per trade
+    - Low Conviction:     1% risk per trade
+
+Prerequisite: Must run Stage 1 (screening) first
+Output: Shows max shares, position value, and risk amount for each signal
+
+
+4. PERFORMANCE ANALYSIS
+-----------------------
+Purpose: Generate comprehensive trading performance report
+
+Basic usage:
+    python main.py --performance
+
+With custom account size:
+    python main.py --performance --cash 25000
+
+With custom data directory:
+    python main.py --performance --data-dir ./my_data
+
+Output: Saves performance_report_YYYYMMDD.txt and displays:
+    - Overall performance metrics (win rate, P&L, expectancy)
+    - Performance by setup type (position vs swing)
+    - Drawdown analysis
+    - Open positions list
+
+
+================================================================================
+                            GLOBAL OPTIONS
+================================================================================
+
+--data-dir PATH
+    Specify custom data directory (default: ./data)
+    Example: python main.py --stage screening --data-dir ./my_data
+
+--cash AMOUNT
+    Set available capital in MAD (default: 10000)
+    Example: python main.py --stage signals --cash 50000
+
+--full
+    Used with --stage screening to get ALL tickers without filters
+    Example: python main.py --stage screening --full
+
+--help
+    Show all available options and help text
+    Example: python main.py --help
+
+
+================================================================================
+                         ENVIRONMENT VARIABLES
+================================================================================
+
+For TradingView Data Access (optional):
+
+Windows:
+    set TV_USERNAME=your_username
+    set TV_PASSWORD=your_password
+
+Linux/Mac:
+    export TV_USERNAME=your_username
+    export TV_PASSWORD=your_password
+
+Set these before running commands to enable real-time data fetching.
+
+
+================================================================================
+                          TYPICAL WORKFLOWS
+================================================================================
+
+WORKFLOW 1: Daily Analysis
+--------------------------
+1. Run screening to find candidates:
+   python main.py --stage screening
+
+2. Generate signals for candidates:
+   python main.py --stage signals
+
+3. Calculate position sizes:
+   python main.py --position-sizing
+
+
+WORKFLOW 2: Full Analysis with Custom Cash
+------------------------------------------
+1. python main.py --stage screening
+2. python main.py --stage signals --cash 50000
+3. python main.py --position-sizing --cash 50000
+4. python main.py --performance --cash 50000
+
+
+WORKFLOW 3: Explore All Tickers
+-------------------------------
+1. Get unfiltered watchlist:
+   python main.py --stage screening --full
+
+2. Generate signals from full list:
+   python main.py --stage signals
+
+
+WORKFLOW 4: Multiple Data Directories
+-------------------------------------
+1. Screening with custom path:
+   python main.py --stage screening --data-dir ./data_monday
+
+2. Generate signals from that data:
+   python main.py --stage signals --data-dir ./data_monday
+
+
+================================================================================
+                           OUTPUT FILES
+================================================================================
+
+Generated in --data-dir (default: ./data):
+
+watchlist_YYYYMMDD_position.csv    - Position trading candidates
+watchlist_YYYYMMDD_swing.csv       - Swing trading candidates
+trade_journal.csv                  - Record of all trades (if using journal)
+performance_report_YYYYMMDD.txt    - Performance analysis report
+
+
+================================================================================
+                            EXAMPLES
+================================================================================
+
+Example 1: Basic Screening
+--------------------------
+python main.py --stage screening
+
+Output:
+    Position Trading Candidates: 15
+    Swing Trading Candidates: 8
+
+
+Example 2: Signal Generation with 25k MAD
+-----------------------------------------
+python main.py --stage signals --cash 25000
+
+Output:
+    POSITION SIGNALS:
+    Symbol  Entry Price  Stop Loss  Target Price  Risk Reward  Conviction
+    ADH      245.50       238.00     262.00        2.3          medium
+    ...
+
+
+Example 3: Position Sizing
+--------------------------
+python main.py --position-sizing --cash 25000
+
+Output:
+    POSITION SIZING RECOMMENDATIONS
+    Cash Available: 25,000.00 MAD
+
+    ADH (MEDIUM)
+      Entry: 245.50 MAD
+      Stop:  238.00 MAD
+      Max Shares: 333
+      Position Value: 81,753.50 MAD
+      Risk Amount: 375.00 MAD (1.5%)
+
+
+Example 4: Performance Report
+-----------------------------
+python main.py --performance
+
+Output:
+    SIGNAL CATCHER - PERFORMANCE REPORT
+    ========================================
+    Total Trades: 45
+    Win Rate: 62.5%
+    Total P&L: 12,450.00 MAD
+    Profit Factor: 1.85
+    Average R-Multiple: 1.25R
+    Expectancy: 276.67
+
+
+================================================================================
+                           TROUBLESHOOTING
+================================================================================
+
+Problem: "No watchlist found. Please run Stage 1 first."
+Solution: Run screening before signals or position-sizing:
+    python main.py --stage screening
+
+Problem: Signals require more cash than available
+Solution: Reduce number of positions or increase cash parameter:
+    python main.py --position-sizing --cash 50000
+
+Problem: No data from TradingView
+Solution: Set environment variables:
+    set TV_USERNAME=your_username
+    set TV_PASSWORD=your_password
+
+
+================================================================================
+                           SYSTEM REQUIREMENTS
+================================================================================
+
+- Python 3.8+
+- Required packages: pandas, numpy, tvscreener, tvDatafeed
+- Internet connection (for TradingView data)
+- ~100MB disk space for data storage
+
+
+================================================================================
+                              SUPPORT
+================================================================================
+
+For issues or questions:
+- Check the help: python main.py --help
+- Review the voir.txt file for additional notes
+- Report issues at: https://github.com/anomalyco/opencode/issues
+
+================================================================================

@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+
+{% block title %}Stage 1: Market Screening{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>🔍 Stage 1: Market Screening</h1>
+    <p class="page-description">
+        Screen CSEMA stocks to find position and swing trading candidates.
+        <br>Minimum turnover: <strong>100,000 MAD</strong> (Price × Average Volume 30d)
+    </p>
+
+    <div class="form-section">
+        <form method="POST" class="screening-form">
+            <div class="form-group checkbox-group">
+                <label class="checkbox-label">
+                    <input type="checkbox" name="full_watchlist" id="full_watchlist">
+                    <span class="checkmark"></span>
+                    Show ALL tickers (no filters)
+                </label>
+                <small class="form-help">If checked, returns all CSEMA stocks without filtering</small>
+            </div>
+
+            <button type="submit" class="btn btn-large btn-primary">
+                <span class="btn-icon">🚀</span>
+                Run Screening
+            </button>
+        </form>
+    </div>
+
+    {% if results %}
+    <div class="results-section">
+        <div class="results-summary">
+            <h2>Screening Results</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value">{{ total_position }}</span>
+                    <span class="stat-label">Position Candidates</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ total_swing }}</span>
+                    <span class="stat-label">Swing Candidates</span>
+                </div>
+            </div>
+        </div>
+
+        {% if position_candidates %}
+        <div class="table-section">
+            <h3>📈 Position Trading Candidates</h3>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Change %</th>
+                            <th>Sector</th>
+                            <th>Market Cap</th>
+                            <th>P/E</th>
+                            <th>ROE %</th>
+                            <th>RSI</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for candidate in position_candidates %}
+                        <tr>
+                            <td class="symbol-cell"><strong>{{ candidate.Symbol }}</strong></td>
+                            <td>{{ candidate.Name }}</td>
+                            <td class="numeric">{{ "%.2f"|format(candidate.Price) if candidate.Price else '-' }}</td>
+                            <td class="numeric {{ 'positive' if candidate['Change %'] and candidate['Change %'] > 0 else 'negative' if candidate['Change %'] and candidate['Change %'] < 0 else '' }}">
+                                {{ "%.2f"|format(candidate['Change %']) if candidate['Change %'] else '-' }}%
+                            </td>
+                            <td>{{ candidate.Sector if candidate.Sector else '-' }}</td>
+                            <td class="numeric">{{ "%.0f"|format(candidate['Market Capitalization']/1e6) if candidate['Market Capitalization'] else '-' }}M</td>
+                            <td class="numeric">{{ "%.1f"|format(candidate['Price to Earnings Ratio (TTM)']) if candidate['Price to Earnings Ratio (TTM)'] else '-' }}</td>
+                            <td class="numeric">{{ "%.1f"|format(candidate['Return on Equity % (MRQ)']) if candidate['Return on Equity % (MRQ)'] else '-' }}%</td>
+                            <td class="numeric">{{ "%.1f"|format(candidate['Relative Strength Index (14)']) if candidate['Relative Strength Index (14)'] else '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if swing_candidates %}
+        <div class="table-section">
+            <h3>📊 Swing Trading Candidates</h3>
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Symbol</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Change %</th>
+                            <th>Sector</th>
+                            <th>Volume</th>
+                            <th>RSI</th>
+                            <th>MACD</th>
+                            <th>52W High</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for candidate in swing_candidates %}
+                        <tr>
+                            <td class="symbol-cell"><strong>{{ candidate.Symbol }}</strong></td>
+                            <td>{{ candidate.Name }}</td>
+                            <td class="numeric">{{ "%.2f"|format(candidate.Price) if candidate.Price else '-' }}</td>
+                            <td class="numeric {{ 'positive' if candidate['Change %'] and candidate['Change %'] > 0 else 'negative' if candidate['Change %'] and candidate['Change %'] < 0 else '' }}">
+                                {{ "%.2f"|format(candidate['Change %']) if candidate['Change %'] else '-' }}%
+                            </td>
+                            <td>{{ candidate.Sector if candidate.Sector else '-' }}</td>
+                            <td class="numeric">{{ "%.0f"|format(candidate.Volume) if candidate.Volume else '-' }}</td>
+                            <td class="numeric">{{ "%.1f"|format(candidate['Relative Strength Index (14)']) if candidate['Relative Strength Index (14)'] else '-' }}</td>
+                            <td class="numeric">{{ "%.3f"|format(candidate['MACD Level (12, 26)']) if candidate['MACD Level (12, 26)'] else '-' }}</td>
+                            <td class="numeric">{{ "%.2f"|format(candidate['52 Week High']) if candidate['52 Week High'] else '-' }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if not position_candidates and not swing_candidates %}
+        <div class="alert alert-warning">
+            <strong>No candidates found!</strong> Try running with "Show ALL tickers" option or check your data connection.
+        </div>
+        {% endif %}
+
+        <div class="next-steps">
+            <p>Next step: <a href="{{ url_for('signals') }}" class="btn btn-secondary">Generate Trading Signals →</a></p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

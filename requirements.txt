@@ -1,0 +1,18 @@
+# Signal Catcher Web App - Python Dependencies
+
+# Web Framework
+Flask>=2.0.0
+
+# Core Dependencies
+pandas>=1.3.0
+numpy>=1.21.0
+
+# Data Sources
+tvscreener
+tvDatafeed
+
+# Server
+gunicorn>=20.0.0
+
+# Environment
+python-dotenv>=0.19.0

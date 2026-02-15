@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}About{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>ℹ️ About Signal Catcher</h1>
+    
+    <div class="about-section">
+        <h2>CSEMA Trading System</h2>
+        <p>
+            Signal Catcher is an automated trading system designed for the Moroccan stock market (CSEMA).
+            It combines fundamental screening, technical analysis, risk management, and accurate fee calculations
+            to help traders make informed decisions.
+        </p>
+    </div>
+
+    <div class="about-grid">
+        <div class="about-card">
+            <h3>🎯 Key Features</h3>
+            <ul>
+                <li>Automated market screening with 100K MAD turnover filter</li>
+                <li>Technical signal generation with stop-loss and targets</li>
+                <li>Position sizing with CSEMA brokerage fees</li>
+                <li>Performance tracking with gross and net P&L</li>
+                <li>Support for position and swing trading strategies</li>
+            </ul>
+        </div>
+
+        <div class="about-card">
+            <h3>📊 Trading Strategies</h3>
+            <h4>Position Trading</h4>
+            <ul>
+                <li>Weekly trend analysis</li>
+                <li>Pullback to SMA20 entries</li>
+                <li>2.5:1 minimum risk/reward</li>
+                <li>1% risk per trade</li>
+            </ul>
+            
+            <h4>Swing Trading</h4>
+            <ul>
+                <li>Breakout confirmations</li>
+                <li>Volume surge analysis</li>
+                <li>2:1 minimum risk/reward</li>
+                <li>1.5% risk per trade</li>
+            </ul>
+        </div>
+
+        <div class="about-card">
+            <h3>💰 Fee Structure</h3>
+            <p>CSEMA brokerage fees included:</p>
+            <table class="fee-table">
+                <tr>
+                    <td>Brokerage</td>
+                    <td>0.60%</td>
+                    <td>(Min: 7.50 MAD)</td>
+                </tr>
+                <tr>
+                    <td>Settlement</td>
+                    <td>0.20%</td>
+                    <td>(Min: 2.50 MAD)</td>
+                </tr>
+                <tr>
+                    <td>SBVC</td>
+                    <td>0.10%</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>VAT</td>
+                    <td>10%</td>
+                    <td>(On fees)</td>
+                </tr>
+                <tr class="total">
+                    <td><strong>Total Roundtrip</strong></td>
+                    <td colspan="2"><strong>~1.98%</strong></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="about-card">
+            <h3>🔧 Technical Indicators</h3>
+            <ul>
+                <li>Moving Averages (SMA 20, 50, 200)</li>
+                <li>RSI (Relative Strength Index)</li>
+                <li>MACD (Moving Average Convergence)</li>
+                <li>ATR (Average True Range)</li>
+                <li>Bollinger Bands</li>
+                <li>Stochastic Oscillator</li>
+                <li>ADX (Average Directional Index)</li>
+                <li>MFI (Money Flow Index)</li>
+                <li>VWAP (Volume Weighted Average Price)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="workflow-section">
+        <h2>How It Works</h2>
+        <div class="workflow-steps">
+            <div class="workflow-step">
+                <div class="step-number">1</div>
+                <h4>Stage 1: Screening</h4>
+                <p>Filter CSEMA stocks by fundamentals and technicals. Minimum 100K MAD daily turnover.</p>
+            </div>
+            <div class="workflow-step">
+                <div class="step-number">2</div>
+                <h4>Stage 2: Signals</h4>
+                <p>Generate entry signals with stop-loss, targets, and risk/reward ratios.</p>
+            </div>
+            <div class="workflow-step">
+                <div class="step-number">3</div>
+                <h4>Position Sizing</h4>
+                <p>Calculate optimal position sizes including all brokerage fees.</p>
+            </div>
+            <div class="workflow-step">
+                <div class="step-number">4</div>
+                <h4>Performance</h4>
+                <p>Track gross and net P&L, win rate, and other metrics.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="info-section">
+        <h2>Getting Started</h2>
+        <ol>
+            <li>Set your <code>TV_USERNAME</code> and <code>TV_PASSWORD</code> environment variables (optional, for real-time data)</li>
+            <li>Run <strong>Stage 1: Screening</strong> to find candidates</li>
+            <li>Run <strong>Stage 2: Signals</strong> to generate entry points</li>
+            <li>Use <strong>Position Sizing</strong> to calculate shares and fees</li>
+            <li>Execute trades and record them in the trade journal</li>
+            <li>Monitor <strong>Performance</strong> to track results</li>
+        </ol>
+    </div>
+
+    <div class="disclaimer">
+        <h3>⚠️ Disclaimer</h3>
+        <p>
+            This software is for informational purposes only. Trading involves substantial risk of loss.
+            Past performance is not indicative of future results. Always do your own research and consider
+            consulting with a financial advisor before making investment decisions.
+        </p>
+    </div>
+</div>
+{% endblock %}

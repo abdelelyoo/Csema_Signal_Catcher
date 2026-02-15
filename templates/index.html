@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block title %}Signal Catcher - Home{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="hero">
+        <h1>📈 Signal Catcher</h1>
+        <p class="hero-subtitle">CSEMA Trading System - Web Interface</p>
+        <p class="hero-description">
+            Automated screening and signal generation for Moroccan stocks (CSEMA).
+            Find position and swing trading opportunities with built-in risk management.
+        </p>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">🔍</div>
+            <h3>Stage 1: Market Screening</h3>
+            <p>Screen CSEMA stocks for position and swing trading candidates using fundamental and technical filters.</p>
+            <a href="{{ url_for('screening') }}" class="btn btn-primary">Start Screening</a>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📊</div>
+            <h3>Stage 2: Signal Generation</h3>
+            <p>Generate entry signals with stop-loss, target prices, and risk/reward calculations based on technical analysis.</p>
+            <a href="{{ url_for('signals') }}" class="btn btn-primary">Generate Signals</a>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">⚖️</div>
+            <h3>Position Sizing</h3>
+            <p>Calculate optimal position sizes based on your capital, risk tolerance, and brokerage fees.</p>
+            <a href="{{ url_for('position_sizing') }}" class="btn btn-primary">Calculate Sizes</a>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">📈</div>
+            <h3>Performance Tracking</h3>
+            <p>Track your trading performance with detailed metrics including win rate, P&L, and drawdown analysis.</p>
+            <a href="{{ url_for('performance') }}" class="btn btn-primary">View Performance</a>
+        </div>
+    </div>
+
+    <div class="info-section">
+        <h2>Key Features</h2>
+        <ul class="feature-list">
+            <li>✅ <strong>100K MAD Minimum Turnover</strong> - Only liquid stocks</li>
+            <li>✅ <strong>CSEMA Brokerage Fees</strong> - Accurate cost calculations (0.6% + 0.2% + 0.1% + VAT)</li>
+            <li>✅ <strong>Risk Management</strong> - Built-in position sizing based on conviction levels</li>
+            <li>✅ <strong>Technical Analysis</strong> - RSI, MACD, ATR, Stochastic, ADX indicators</li>
+            <li>✅ <strong>Net P&L Tracking</strong> - Performance metrics after fees</li>
+        </ul>
+    </div>
+
+    <div class="quick-start">
+        <h2>Quick Start</h2>
+        <div class="steps">
+            <div class="step">
+                <span class="step-number">1</span>
+                <p>Run <strong>Stage 1: Screening</strong> to find trading candidates</p>
+            </div>
+            <div class="step">
+                <span class="step-number">2</span>
+                <p>Run <strong>Stage 2: Signals</strong> to generate entry points</p>
+            </div>
+            <div class="step">
+                <span class="step-number">3</span>
+                <p>Use <strong>Position Sizing</strong> to calculate shares and fees</p>
+            </div>
+            <div class="step">
+                <span class="step-number">4</span>
+                <p>Monitor <strong>Performance</strong> to track results</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

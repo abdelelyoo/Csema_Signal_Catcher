@@ -1,0 +1,171 @@
+{% extends "base.html" %}
+
+{% block title %}Stage 2: Signal Generation{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>📊 Stage 2: Signal Generation</h1>
+    <p class="page-description">
+        Generate entry signals with stop-loss, targets, and risk/reward ratios.
+    </p>
+
+    <div class="form-section">
+        <form method="POST" class="signals-form">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="cash">Available Cash (MAD)</label>
+                    <input type="number" name="cash" id="cash" value="{{ cash if cash else '100000' }}" min="1000" step="1000" class="form-control">
+                    <small class="form-help">Your available trading capital in MAD</small>
+                </div>
+            </div>
+
+            <button type="submit" class="btn btn-large btn-primary">
+                <span class="btn-icon">📡</span>
+                Generate Signals
+            </button>
+        </form>
+    </div>
+
+    {% if results %}
+    <div class="results-section">
+        <div class="results-summary">
+            <h2>Signal Results</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <span class="stat-value">{{ total_position }}</span>
+                    <span class="stat-label">Position Signals</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-value">{{ total_swing }}</span>
+                    <span class="stat-label">Swing Signals</span>
+                </div>
+            </div>
+        </div>
+
+        {% if position_signals %}
+        <div class="signals-section">
+            <h3>📈 Position Trading Signals</h3>
+            <div class="signals-grid">
+                {% for signal in position_signals %}
+                <div class="signal-card {{ signal.conviction }}">
+                    <div class="signal-header">
+                        <span class="symbol">{{ signal.symbol }}</span>
+                        <span class="conviction-badge {{ signal.conviction }}">{{ signal.conviction.upper() }}</span>
+                    </div>
+                    <div class="signal-body">
+                        <div class="price-row">
+                            <div class="price-item">
+                                <span class="label">Entry</span>
+                                <span class="value">{{ "%.2f"|format(signal.entry_price) }} MAD</span>
+                            </div>
+                            <div class="price-item">
+                                <span class="label">Stop Loss</span>
+                                <span class="value stop">{{ "%.2f"|format(signal.stop_loss) }} MAD</span>
+                            </div>
+                            <div class="price-item">
+                                <span class="label">Target</span>
+                                <span class="value target">{{ "%.2f"|format(signal.target_price) }} MAD</span>
+                            </div>
+                            {% if signal.target_price_2 %}
+                            <div class="price-item">
+                                <span class="label">Target 2</span>
+                                <span class="value target">{{ "%.2f"|format(signal.target_price_2) }} MAD</span>
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="metrics-row">
+                            <div class="metric">
+                                <span class="metric-label">R/R</span>
+                                <span class="metric-value">1:{{ "%.1f"|format(signal.risk_reward) }}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Position</span>
+                                <span class="metric-value">{{ signal.position_size }} shares</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">ATR</span>
+                                <span class="metric-value">{{ "%.2f"|format(signal.atr) }}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">RSI</span>
+                                <span class="metric-value">{{ "%.1f"|format(signal.rsi) }}</span>
+                            </div>
+                        </div>
+                        <div class="notes">
+                            <small>{{ signal.setup_notes }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if swing_signals %}
+        <div class="signals-section">
+            <h3>📊 Swing Trading Signals</h3>
+            <div class="signals-grid">
+                {% for signal in swing_signals %}
+                <div class="signal-card {{ signal.conviction }}">
+                    <div class="signal-header">
+                        <span class="symbol">{{ signal.symbol }}</span>
+                        <span class="conviction-badge {{ signal.conviction }}">{{ signal.conviction.upper() }}</span>
+                    </div>
+                    <div class="signal-body">
+                        <div class="price-row">
+                            <div class="price-item">
+                                <span class="label">Entry</span>
+                                <span class="value">{{ "%.2f"|format(signal.entry_price) }} MAD</span>
+                            </div>
+                            <div class="price-item">
+                                <span class="label">Stop Loss</span>
+                                <span class="value stop">{{ "%.2f"|format(signal.stop_loss) }} MAD</span>
+                            </div>
+                            <div class="price-item">
+                                <span class="label">Target</span>
+                                <span class="value target">{{ "%.2f"|format(signal.target_price) }} MAD</span>
+                            </div>
+                        </div>
+                        <div class="metrics-row">
+                            <div class="metric">
+                                <span class="metric-label">R/R</span>
+                                <span class="metric-value">1:{{ "%.1f"|format(signal.risk_reward) }}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">Position</span>
+                                <span class="metric-value">{{ signal.position_size }} shares</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">ATR</span>
+                                <span class="metric-value">{{ "%.2f"|format(signal.atr) }}</span>
+                            </div>
+                            <div class="metric">
+                                <span class="metric-label">RSI</span>
+                                <span class="metric-value">{{ "%.1f"|format(signal.rsi) }}</span>
+                            </div>
+                        </div>
+                        <div class="notes">
+                            <small>{{ signal.setup_notes }}</small>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if not position_signals and not swing_signals %}
+        <div class="alert alert-warning">
+            <strong>No signals generated!</strong> Please run <a href="{{ url_for('screening') }}">Stage 1: Screening</a> first.
+        </div>
+        {% endif %}
+
+        {% if position_signals or swing_signals %}
+        <div class="next-steps">
+            <p>Next step: <a href="{{ url_for('position_sizing') }}" class="btn btn-secondary">Calculate Position Sizes →</a></p>
+        </div>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

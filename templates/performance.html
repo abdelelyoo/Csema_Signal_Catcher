@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block title %}Performance Tracking{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>📈 Performance Tracking</h1>
+    <p class="page-description">
+        View comprehensive trading performance metrics including gross and net P&L (after fees).
+    </p>
+
+    <div class="form-section inline">
+        <form method="GET" class="performance-form">
+            <div class="form-group">
+                <label for="cash">Account Size (MAD)</label>
+                <input type="number" name="cash" id="cash" value="{{ cash if cash else '100000' }}" min="1000" step="1000" class="form-control">
+            </div>
+            <button type="submit" class="btn btn-primary">Update Report</button>
+        </form>
+    </div>
+
+    {% if report %}
+    <div class="report-section">
+        <div class="report-container">
+            <pre class="report-text">{{ report }}</pre>
+        </div>
+    </div>
+    {% else %}
+    <div class="info-box">
+        <h3>No Performance Data</h3>
+        <p>Performance data is generated from your trade journal file.</p>
+        <p>To track performance:</p>
+        <ol>
+            <li>Execute trades based on the signals generated</li>
+            <li>Record trades in the trade journal (data/trade_journal.csv)</li>
+            <li>Return to this page to see performance metrics</li>
+        </ol>
+        
+        <div class="sample-format">
+            <h4>Trade Journal Format</h4>
+            <p>The system expects a CSV file at <code>data/trade_journal.csv</code> with columns:</p>
+            <ul>
+                <li>trade_id, date_entered, date_exited, symbol, setup_type</li>
+                <li>entry_price, exit_price, position_size, stop_loss, target_price</li>
+                <li>risk_amount, pnl, pnl_percent, r_multiple, exit_reason</li>
+                <li>conviction, setup_notes</li>
+            </ul>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
